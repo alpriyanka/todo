@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sir marchipokandi❤️</title>
+    <style>
+        :root {
+            --primary-color: #ff6b8b;
+            --secondary-color: #ffb8c6;
+            --accent-color: #ff4757;
+            --text-color: #333;
+            --light-bg: #fff5f7;
+            --due-soon: #ff7b00;
+            --overdue: #ff0000;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255,214,221,0.5) 0%, rgba(255,214,221,0.3) 90%);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+        }
+        
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-family: 'Pacifico', cursive;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .couple-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 10px auto;
+        }
+        
+        .subtitle {
+            color: var(--primary-color);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .app-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        #new-todo {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        #new-todo:focus {
+            border-color: var(--primary-color);
+        }
+        
+        #add-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        #add-btn:hover {
+            background-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+        
+        .priority-select {
+            padding: 12px 15px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+        }
+        
+        .datetime-picker {
+            padding: 11px 15px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+        }
+        
+        .reminder-toggle {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0 10px;
+        }
+        
+        .reminder-toggle.active {
+            color: var(--accent-color);
+            animation: ring 0.5s ease;
+        }
+        
+        @keyframes ring {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            75% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
+        }
+        
+        #todo-list {
+            list-style: none;
+            padding: 0;
+            min-height: 300px;
+        }
+        
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .todo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .todo-item.priority-high {
+            border-left-color: var(--accent-color);
+            background-color: #fff0f3;
+        }
+        
+        .todo-item.priority-medium {
+            border-left-color: #ffa502;
+        }
+        
+        .todo-item.priority-low {
+            border-left-color: #2ed573;
+        }
+        
+        .todo-text {
+            flex: 1;
+            margin: 0 15px;
+            word-break: break-word;
+        }
+        
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            appearance: none;
+            border: 2px solid var(--secondary-color);
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .todo-checkbox:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .todo-checkbox:checked::after {
+            content: "❤";
+            position: absolute;
+            top: -5px;
+            left: -1px;
+            font-size: 18px;
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .delete-btn:hover {
+            color: var(--accent-color);
+        }
+        
+        .completed {
+            opacity: 0.7;
+            background-color: #f8f8f8;
+        }
+        
+        .completed .todo-text {
+            text-decoration: line-through;
+            color: #888;
+        }
+        
+        .due-date {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: #f0f0f0;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .due-date.soon {
+            background-color: #fff3e0;
+            color: var(--due-soon);
+            font-weight: bold;
+        }
+        
+        .due-date.overdue {
+            background-color: #ffebee;
+            color: var(--overdue);
+            font-weight: bold;
+        }
+        
+        .due-date-icon {
+            margin-right: 4px;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        
+        .motivation {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .motivation-text {
+            font-size: 18px;
+            color: var(--primary-color);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .motivation-author {
+            font-weight: bold;
+        }
+        
+        .kisses-owed {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        
+        .kisses-count {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-color);
+            display: inline-block;
+            min-width: 30px;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+        }
+        
+        .notification-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-color);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            #new-todo, #add-btn, .priority-select, .datetime-picker {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .reminder-toggle {
+                align-self: center;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="couple.jpg" alt="Couple Photo" class="couple-photo">
+            <h1>Good boy marchipoku...Sare naa??</h1>
+            <p class="subtitle">Naku tlsu andi mii manasu alochanalu anni vere dani meedho ledha chala visyalu okesaru alochisthundi kabbatiii..... ❤️</p>
+        </header>
+        
+        <div class="app-container">
+            <div class="input-group">
+                <input type="text" id="new-todo" placeholder="Em gurthu pettukovaloo ikkade raaseyy?">
+                <select class="priority-select" id="priority-select">
+                    <option value="low">Low Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="high">High Priority</option>
+                </select>
+                <input type="datetime-local" id="due-date" class="datetime-picker">
+                <button id="reminder-toggle" class="reminder-toggle">
+                    <i class="far fa-bell"></i>
+                </button>
+                <button id="add-btn">Add</button>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-filter="all">All Tasks</div>
+                <div class="tab" data-filter="active">Active</div>
+                <div class="tab" data-filter="completed">Completed</div>
+            </div>
+            
+            <ul id="todo-list">
+                <li class="todo-item priority-high">
+                    <input type="checkbox" class="todo-checkbox">
+                    <span class="todo-text">Wish my amazing girlfriend good morning ❤️</span>
+                    <span class="due-date" data-due="1712347200000">
+                        <i class="far fa-clock due-date-icon"></i>Apr 5, 12:00 PM
+                    </span>
+                    <button class="delete-btn">×</button>
+                </li>
+                <li class="todo-item priority-medium">
+                    <input type="checkbox" class="todo-checkbox">
+                    <span class="todo-text">Buy groceries (don't forget the ice cream!)</span>
+                    <button class="delete-btn">×</button>
+                </li>
+                <li class="todo-item priority-low completed">
+                    <input type="checkbox" class="todo-checkbox" checked>
+                    <span class="todo-text">Take out the trash</span>
+                    <button class="delete-btn">×</button>
+                </li>
+            </ul>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number" id="total-count">3</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="active-count">2</div>
+                    <div class="stat-label">Active</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="completed-count">1</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="motivation">
+            <p class="motivation-text" id="motivation-text">Nuvvu task finish chesina prathi sari ninnu naa hakkuna cherchukodaniki daggara chestundi...🫂🤗</p>
+            <p class="motivation-author">- Ni priyamaina Laasya</p>
+        </div>
+        
+        <div class="kisses-owed">
+            Cheppina mata vinte debbalu padavu raja.... muddulu pedathayi.. <span class="kisses-count" id="kisses-count">5</span> 💋
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <button class="notification-close">×</button>
+        <div class="notification-title">Reminder ⏰</div>
+        <div class="notification-message" id="notification-message"></div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const todoInput = document.getElementById('new-todo');
+        const addBtn = document.getElementById('add-btn');
+        const todoList = document.getElementById('todo-list');
+        const prioritySelect = document.getElementById('priority-select');
+        const dueDateInput = document.getElementById('due-date');
+        const reminderToggle = document.getElementById('reminder-toggle');
+        const tabs = document.querySelectorAll('.tab');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notification-message');
+        const notificationClose = document.querySelector('.notification-close');
+        
+        const motivationTexts = [
+            "Every task you complete brings you one step closer to cuddle time!",
+            "You're doing amazing, sweetie!",
+            "I believe in you more than you believe in yourself!",
+            "One task at a time, my love. You've got this!",
+            "Remember how good it feels to check things off this list!",
+            "I'm so proud of you for every little thing you accomplish!",
+            "The faster you finish, the sooner we can spend time together!",
+            "You're not forgetting things - you're just prioritizing our love more!",
+            "Every completed task = one virtual hug from me!",
+            "Your effort doesn't go unnoticed. I see you and appreciate you!"
+        ];
+        
+        let reminderActive = false;
+        let scheduledReminders = {};
+        
+        // Initialize
+        updateStats();
+        setMinDueDate();
+        
+        // Event Listeners
+        addBtn.addEventListener('click', addTodo);
+        todoInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addTodo();
+        });
+        
+        reminderToggle.addEventListener('click', toggleReminder);
+        notificationClose.addEventListener('click', hideNotification);
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                filterTodos(this.dataset.filter);
+            });
+        });
+        
+        // Set minimum datetime to current time
+        function setMinDueDate() {
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - timezoneOffset)).toISOString().slice(0, 16);
+            dueDateInput.min = localISOTime;
+        }
+        
+        function toggleReminder() {
+            reminderActive = !reminderActive;
+            const bellIcon = reminderToggle.querySelector('i');
+            
+            if (reminderActive) {
+                reminderToggle.classList.add('active');
+                bellIcon.classList.remove('far');
+                bellIcon.classList.add('fas');
+                setTimeout(() => {
+                    reminderToggle.classList.remove('active');
+                }, 500);
+            } else {
+                bellIcon.classList.remove('fas');
+                bellIcon.classList.add('far');
+            }
+        }
+        
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (text) {
+                const priority = prioritySelect.value;
+                const dueDate = dueDateInput.value;
+                const hasReminder = reminderActive;
+                
+                const li = document.createElement('li');
+                li.className = `todo-item priority-${priority}`;
+                
+                const taskId = 'task-' + Date.now();
+                li.dataset.taskId = taskId;
+                
+                let dueDateHtml = '';
+                if (dueDate) {
+                    const dateObj = new Date(dueDate);
+                    const formattedDate = formatDate(dateObj);
+                    dueDateHtml = `<span class="due-date" data-due="${dateObj.getTime()}">
+                        <i class="far fa-clock due-date-icon"></i>${formattedDate}
+                    </span>`;
+                    
+                    if (hasReminder) {
+                        scheduleReminder(taskId, text, dateObj);
+                    }
+                }
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="todo-checkbox">
+                    <span class="todo-text">${text}</span>
+                    ${dueDateHtml}
+                    <button class="delete-btn">×</button>
+                `;
+                
+                todoList.appendChild(li);
+                todoInput.value = '';
+                dueDateInput.value = '';
+                if (reminderActive) {
+                    toggleReminder();
+                }
+                
+                li.querySelector('.todo-checkbox').addEventListener('change', toggleComplete);
+                li.querySelector('.delete-btn').addEventListener('click', deleteTodo);
+                
+                updateStats();
+                updateKissesOwed();
+                animateAddition(li);
+                updateDueDateStyles();
+            }
+        }
+        
+        function formatDate(date) {
+            const options = { 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            };
+            return date.toLocaleString('en-US', options);
+        }
+        
+        function scheduleReminder(taskId, text, dueDate) {
+            if (scheduledReminders[taskId]) {
+                clearTimeout(scheduledReminders[taskId]);
+            }
+            
+            const now = new Date();
+            const timeUntilDue = dueDate.getTime() - now.getTime();
+            
+            if (timeUntilDue > 0) {
+                scheduledReminders[taskId] = setTimeout(() => {
+                    showNotification(`"${text}" is due now!`);
+                }, timeUntilDue);
+            }
+        }
+        
+        function showNotification(message) {
+            notificationMessage.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                hideNotification();
+            }, 10000);
+        }
+        
+        function hideNotification() {
+            notification.classList.remove('show');
+        }
+        
+        function toggleComplete(e) {
+            const item = e.target.closest('.todo-item');
+            item.classList.toggle('completed');
+            
+            if (item.classList.contains('completed')) {
+                createConfetti(item);
+                updateMotivationText();
+            }
+            
+            updateStats();
+            updateKissesOwed();
+        }
+        
+        function deleteTodo(e) {
+            const item = e.target.closest('.todo-item');
+            const taskId = item.dataset.taskId;
+            
+            if (scheduledReminders[taskId]) {
+                clearTimeout(scheduledReminders[taskId]);
+                delete scheduledReminders[taskId];
+            }
+            
+            item.classList.add('fade-out');
+            setTimeout(() => {
+                item.remove();
+                updateStats();
+                updateKissesOwed();
+            }, 300);
+        }
+        
+        function filterTodos(filter) {
+            const items = todoList.querySelectorAll('.todo-item');
+            
+            items.forEach(item => {
+                switch(filter) {
+                    case 'all':
+                        item.style.display = 'flex';
+                        break;
+                    case 'active':
+                        item.style.display = item.classList.contains('completed') ? 'none' : 'flex';
+                        break;
+                    case 'completed':
+                        item.style.display = item.classList.contains('completed') ? 'flex' : 'none';
+                        break;
+                }
+            });
+        }
+        
+        function updateStats() {
+            const total = todoList.querySelectorAll('.todo-item').length;
+            const completed = todoList.querySelectorAll('.todo-item.completed').length;
+            const active = total - completed;
+            
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('active-count').textContent = active;
+            document.getElementById('completed-count').textContent = completed;
+        }
+        
+        function updateMotivationText() {
+            const randomIndex = Math.floor(Math.random() * motivationTexts.length);
+            document.getElementById('motivation-text').textContent = motivationTexts[randomIndex];
+        }
+        
+        function updateKissesOwed() {
+            const activeCount = todoList.querySelectorAll('.todo-item:not(.completed)').length;
+            const kisses = Math.max(0, 5 - activeCount);
+            document.getElementById('kisses-count').textContent = kisses;
+            
+            if (activeCount === 0 && kisses === 5) {
+                createConfetti(document.querySelector('.kisses-owed'), 50);
+            }
+        }
+        
+        function updateDueDateStyles() {
+            const now = new Date();
+            const dueDates = document.querySelectorAll('.due-date');
+            
+            dueDates.forEach(dueDate => {
+                const dueTime = parseInt(dueDate.dataset.due);
+                const timeUntilDue = dueTime - now.getTime();
+                
+                dueDate.classList.remove('soon', 'overdue');
+                
+                if (timeUntilDue < 0) {
+                    dueDate.classList.add('overdue');
+                    dueDate.querySelector('.due-date-icon').className = 'fas fa-exclamation-circle due-date-icon';
+                } else if (timeUntilDue < 24 * 60 * 60 * 1000) {
+                    dueDate.classList.add('soon');
+                    dueDate.querySelector('.due-date-icon').className = 'fas fa-hourglass-half due-date-icon';
+                } else {
+                    dueDate.querySelector('.due-date-icon').className = 'far fa-clock due-date-icon';
+                }
+            });
+        }
+        
+        function animateAddition(element) {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                element.style.transition = 'opacity 0.3s, transform 0.3s';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }, 10);
+        }
+        
+        function createConfetti(sourceElement, amount = 20) {
+            const rect = sourceElement.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < amount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${centerX}px`;
+                confetti.style.top = `${centerY}px`;
+                
+                const size = Math.random() * 10 + 5;
+                const color = `hsl(${Math.random() * 60 + 330}, 100%, 70%)`;
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 5 + 3;
+                const rotation = Math.random() * 360;
+                
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.transform = `rotate(${rotation}deg)`;
+                
+                document.body.appendChild(confetti);
+                
+                const animationDuration = Math.random() * 3000 + 2000;
+                
+                confetti.animate([
+                    { 
+                        opacity: 1,
+                        transform: `translate(0, 0) rotate(${rotation}deg)`,
+                    },
+                    { 
+                        opacity: 0,
+                        transform: `translate(${Math.cos(angle) * velocity * 100}px, ${Math.sin(angle) * velocity * 100 - 100}px) rotate(${rotation + 360}deg)`,
+                    }
+                ], {
+                    duration: animationDuration,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                });
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, animationDuration);
+            }
+        }
+        
+        // Check due dates every minute
+        setInterval(() => {
+            updateDueDateStyles();
+        }, 60000);
+    </script>
+</body>
+</html>
