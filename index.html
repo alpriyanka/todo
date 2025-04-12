@@ -470,6 +470,11 @@
         <div class="notification-message" id="notification-message"></div>
     </div>
 
+    <!-- Audio elements for sounds -->
+    <audio id="complete-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" preload="auto"></audio>
+    <audio id="reminder-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" preload="auto"></audio>
+    <audio id="all-complete-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
+
     <script>
         // DOM Elements
         const todoInput = document.getElementById('new-todo');
@@ -482,6 +487,11 @@
         const notification = document.getElementById('notification');
         const notificationMessage = document.getElementById('notification-message');
         const notificationClose = document.querySelector('.notification-close');
+        
+        // Audio elements
+        const completeSound = document.getElementById('complete-sound');
+        const reminderSound = document.getElementById('reminder-sound');
+        const allCompleteSound = document.getElementById('all-complete-sound');
         
         const motivationTexts = [
             "Nuvvu task finish chesina prathi sari ninnu naa hakkuna cherchukodaniki daggara chestundi...🫂🤗",
@@ -648,6 +658,7 @@
                 if (li.classList.contains('completed')) {
                     createConfetti(li);
                     updateMotivationText();
+                    playSound('complete');
                 }
                 saveTodos();
                 updateStats();
@@ -692,6 +703,7 @@
             if (timeUntilDue > 0) {
                 scheduledReminders[taskId] = setTimeout(() => {
                     showNotification(`"${text}" is due now!`);
+                    playSound('reminder');
                 }, timeUntilDue);
             }
         }
@@ -707,6 +719,30 @@
         
         function hideNotification() {
             notification.classList.remove('show');
+        }
+        
+        function playSound(type) {
+            try {
+                let sound;
+                switch(type) {
+                    case 'complete':
+                        sound = completeSound;
+                        break;
+                    case 'reminder':
+                        sound = reminderSound;
+                        break;
+                    case 'all-complete':
+                        sound = allCompleteSound;
+                        break;
+                    default:
+                        return;
+                }
+                
+                sound.currentTime = 0;
+                sound.play();
+            } catch (e) {
+                console.log("Couldn't play sound:", e);
+            }
         }
         
         function filterTodos(filter) {
@@ -749,6 +785,7 @@
             
             if (activeCount === 0 && kisses === 5) {
                 createConfetti(document.querySelector('.kisses-owed'), 50);
+                playSound('all-complete');
             }
         }
         
