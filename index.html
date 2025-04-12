@@ -435,37 +435,20 @@
             </div>
             
             <ul id="todo-list">
-                <li class="todo-item priority-high">
-                    <input type="checkbox" class="todo-checkbox">
-                    <span class="todo-text">Wish my amazing girlfriend good morning ❤️</span>
-                    <span class="due-date" data-due="1712347200000">
-                        <i class="far fa-clock due-date-icon"></i>Apr 5, 12:00 PM
-                    </span>
-                    <button class="delete-btn">×</button>
-                </li>
-                <li class="todo-item priority-medium">
-                    <input type="checkbox" class="todo-checkbox">
-                    <span class="todo-text">Buy groceries (don't forget the ice cream!)</span>
-                    <button class="delete-btn">×</button>
-                </li>
-                <li class="todo-item priority-low completed">
-                    <input type="checkbox" class="todo-checkbox" checked>
-                    <span class="todo-text">Take out the trash</span>
-                    <button class="delete-btn">×</button>
-                </li>
+                <!-- Tasks will be loaded from localStorage here -->
             </ul>
             
             <div class="stats">
                 <div class="stat-box">
-                    <div class="stat-number" id="total-count">3</div>
+                    <div class="stat-number" id="total-count">0</div>
                     <div class="stat-label">Total Tasks</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-number" id="active-count">2</div>
+                    <div class="stat-number" id="active-count">0</div>
                     <div class="stat-label">Active</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-number" id="completed-count">1</div>
+                    <div class="stat-number" id="completed-count">0</div>
                     <div class="stat-label">Completed</div>
                 </div>
             </div>
@@ -516,8 +499,8 @@
         let scheduledReminders = {};
         
         // Initialize
-        updateStats();
         setMinDueDate();
+        loadTodos();
         
         // Event Listeners
         addBtn.addEventListener('click', addTodo);
@@ -535,6 +518,46 @@
                 filterTodos(this.dataset.filter);
             });
         });
+        
+        // Load todos from localStorage
+        function loadTodos() {
+            const savedTodos = localStorage.getItem('todos');
+            if (savedTodos) {
+                const todos = JSON.parse(savedTodos);
+                todos.forEach(todo => {
+                    renderTodoItem(todo);
+                });
+            }
+            updateStats();
+            updateDueDateStyles();
+        }
+        
+        // Save todos to localStorage
+        function saveTodos() {
+            const todoItems = todoList.querySelectorAll('.todo-item');
+            const todos = [];
+            
+            todoItems.forEach(item => {
+                const text = item.querySelector('.todo-text').textContent;
+                const priority = item.classList.contains('priority-high') ? 'high' : 
+                                item.classList.contains('priority-medium') ? 'medium' : 'low';
+                const completed = item.classList.contains('completed');
+                const dueDateElement = item.querySelector('.due-date');
+                const dueDate = dueDateElement ? dueDateElement.dataset.due : null;
+                const hasReminder = !!dueDateElement;
+                
+                todos.push({
+                    text,
+                    priority,
+                    completed,
+                    dueDate,
+                    hasReminder,
+                    id: item.dataset.taskId
+                });
+            });
+            
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
         
         // Set minimum datetime to current time
         function setMinDueDate() {
@@ -567,48 +590,84 @@
                 const priority = prioritySelect.value;
                 const dueDate = dueDateInput.value;
                 const hasReminder = reminderActive;
-                
-                const li = document.createElement('li');
-                li.className = `todo-item priority-${priority}`;
-                
                 const taskId = 'task-' + Date.now();
-                li.dataset.taskId = taskId;
                 
-                let dueDateHtml = '';
-                if (dueDate) {
-                    const dateObj = new Date(dueDate);
-                    const formattedDate = formatDate(dateObj);
-                    dueDateHtml = `<span class="due-date" data-due="${dateObj.getTime()}">
-                        <i class="far fa-clock due-date-icon"></i>${formattedDate}
-                    </span>`;
-                    
-                    if (hasReminder) {
-                        scheduleReminder(taskId, text, dateObj);
-                    }
-                }
+                const todo = {
+                    text,
+                    priority,
+                    dueDate: dueDate ? new Date(dueDate).getTime() : null,
+                    hasReminder,
+                    completed: false,
+                    id: taskId
+                };
                 
-                li.innerHTML = `
-                    <input type="checkbox" class="todo-checkbox">
-                    <span class="todo-text">${text}</span>
-                    ${dueDateHtml}
-                    <button class="delete-btn">×</button>
-                `;
-                
-                todoList.appendChild(li);
+                renderTodoItem(todo);
                 todoInput.value = '';
                 dueDateInput.value = '';
+                
                 if (reminderActive) {
                     toggleReminder();
                 }
                 
-                li.querySelector('.todo-checkbox').addEventListener('change', toggleComplete);
-                li.querySelector('.delete-btn').addEventListener('click', deleteTodo);
-                
+                saveTodos();
                 updateStats();
                 updateKissesOwed();
-                animateAddition(li);
-                updateDueDateStyles();
             }
+        }
+        
+        function renderTodoItem(todo) {
+            const li = document.createElement('li');
+            li.className = `todo-item priority-${todo.priority} ${todo.completed ? 'completed' : ''}`;
+            li.dataset.taskId = todo.id;
+            
+            let dueDateHtml = '';
+            if (todo.dueDate) {
+                const dateObj = new Date(parseInt(todo.dueDate));
+                const formattedDate = formatDate(dateObj);
+                dueDateHtml = `<span class="due-date" data-due="${todo.dueDate}">
+                    <i class="far fa-clock due-date-icon"></i>${formattedDate}
+                </span>`;
+                
+                if (todo.hasReminder) {
+                    scheduleReminder(todo.id, todo.text, dateObj);
+                }
+            }
+            
+            li.innerHTML = `
+                <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''}>
+                <span class="todo-text">${todo.text}</span>
+                ${dueDateHtml}
+                <button class="delete-btn">×</button>
+            `;
+            
+            todoList.appendChild(li);
+            animateAddition(li);
+            
+            li.querySelector('.todo-checkbox').addEventListener('change', function() {
+                li.classList.toggle('completed');
+                if (li.classList.contains('completed')) {
+                    createConfetti(li);
+                    updateMotivationText();
+                }
+                saveTodos();
+                updateStats();
+                updateKissesOwed();
+            });
+            
+            li.querySelector('.delete-btn').addEventListener('click', function() {
+                if (scheduledReminders[todo.id]) {
+                    clearTimeout(scheduledReminders[todo.id]);
+                    delete scheduledReminders[todo.id];
+                }
+                
+                li.classList.add('fade-out');
+                setTimeout(() => {
+                    li.remove();
+                    saveTodos();
+                    updateStats();
+                    updateKissesOwed();
+                }, 300);
+            });
         }
         
         function formatDate(date) {
@@ -648,36 +707,6 @@
         
         function hideNotification() {
             notification.classList.remove('show');
-        }
-        
-        function toggleComplete(e) {
-            const item = e.target.closest('.todo-item');
-            item.classList.toggle('completed');
-            
-            if (item.classList.contains('completed')) {
-                createConfetti(item);
-                updateMotivationText();
-            }
-            
-            updateStats();
-            updateKissesOwed();
-        }
-        
-        function deleteTodo(e) {
-            const item = e.target.closest('.todo-item');
-            const taskId = item.dataset.taskId;
-            
-            if (scheduledReminders[taskId]) {
-                clearTimeout(scheduledReminders[taskId]);
-                delete scheduledReminders[taskId];
-            }
-            
-            item.classList.add('fade-out');
-            setTimeout(() => {
-                item.remove();
-                updateStats();
-                updateKissesOwed();
-            }, 300);
         }
         
         function filterTodos(filter) {
